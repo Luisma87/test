@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRS Questionnaire</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input, textarea, button { width: 100%; padding: 10px; }
+        button { background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+    <h1>IRS Questionnaire</h1>
+    <form id="questionnaireForm" method="POST" action="process_form.php">
+        <div class="form-group">
+            <label for="orgName">Full Name of Organization</label>
+            <input type="text" id="orgName" name="orgName" required>
+        </div>
+        <div class="form-group">
+            <label for="mailingAddress">Mailing Address</label>
+            <input type="text" id="mailingAddress" name="mailingAddress" required>
+        </div>
+        <div class="form-group">
+            <label for="ein">Employer Identification Number (EIN)</label>
+            <input type="text" id="ein" name="ein" required>
+        </div>
+        <div class="form-group">
+            <label for="activities">Describe Past, Present, and Planned Activities</label>
+            <textarea id="activities" name="activities" rows="5" required></textarea>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>AI Recommendations</h2>
+    <textarea id="aiRecommendations" rows="5" readonly></textarea>
+
+    <script>
+        const form = document.getElementById('questionnaireForm');
+        const recommendationsField = document.getElementById('aiRecommendations');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(form);
+
+            const response = await fetch('process_form.php', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const result = await response.json();
+            if (result.recommendations) {
+                recommendationsField.value = result.recommendations;
+            }
+        });
+    </script>
+</body>
+</html>
